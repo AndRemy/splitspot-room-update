@@ -1,0 +1,16 @@
+{
+  "timeZone": "America/New_York",
+  "dependencies": {
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "sheets": {
+    "macros": [{
+      "menuName": "Timestamp",
+      "functionName": "Timestamp"
+    }]
+  },
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.external_request"
+  ]
+}
