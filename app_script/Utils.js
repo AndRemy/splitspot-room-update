@@ -54,7 +54,7 @@ const listColumns = {
   notes: 28 // Column AC
 };
 
-
+// An enum that help access the columns of the "Price Update" sheet
 const priceUpdateColumns = {
   address: 0, // Column A
   street: 1, // Column B

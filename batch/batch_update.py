@@ -23,10 +23,13 @@ def get_month_distance(destination_month):
 
 
 def get_room_active_text(room_row):
-    """
-
-    :param room_row:
-    :return:
+    """"
+    Function that determines what is the text that best suit the availability status of a room.
+    :param room_row: Row with the information of a specific room
+    :return: A string indicating the availability status of a specific room.
+        "Available Now!" if the room is not a available (except for Upcoming Vacancy).
+        "Available [month] 1st" if the room is in Upcoming Vacancy.
+        "Not Available", if the room is not a available.
     """
     if bool(room_row["IsRoomActive"]):
         if room_row["Status"] == "Upcoming Vacancy":
@@ -39,9 +42,9 @@ def get_room_active_text(room_row):
 
 def complete_unit_data(unit_df):
     """
-
-    :param unit_df:
-    :return:
+    Function that determines the price and status of a Unit based on the information from its rooms
+    :param unit_df: A DataFrame where each row is a room from a single unit.
+    :return: A DataFrame with new rows that holds the Price and Availability information of a unit based on its rooms.
     """
     is_unit_active = bool(unit_df["IsRoomActive"].sum())
     unit_df["IsUnitActive"] = is_unit_active
@@ -76,6 +79,13 @@ def complete_unit_data(unit_df):
 
 
 def get_rooms_data(room_row):
+    """
+    A function that structures the information of a room so it can be transformed in the json format required by the
+    services
+    :param room_row: A row with the information of a row
+    :return: A list composed by the room, a boolean indicating if it's active or not, the price of the room, and its
+    availability text.
+    """
     result = [
         room_row["Room"],
         room_row["IsRoomActive"],
@@ -83,24 +93,23 @@ def get_rooms_data(room_row):
         room_row["RoomActiveText"]
     ]
 
-    # for price in result[2]:  # Price List
-    #     price = price if price != np.nan else None
-
     return result
 
 
 def get_request_parameters(unit_df):
     """
+    Function that receives a dataframe containing the rooms of a single unit and structures its data in the JSON
+    format required by the Wix HTTP Function (batchUpdate). The target format is the following:
     {
         "unitId":____,
         "unitPrice":750,
         "unitAvailability":[true, "Available Now!", "5/5 Rooms Available"],
         "rooms":["A", "B", "C", "D", ...],
-        "roomsPrice":[800, 1000, 950, 750, ...],
+        "roomsPrice":[800, 1000, null, null, ...],
         "roomsAvailability":["Available Now!", "Available November 1st", "Not Available", "Not Available", ...]
     }
-    :param unit_df:
-    :return:
+    :param unit_df: A DataFrame with the information of all the rooms contained in a single unit.
+    :return: A dictionary that matches the JSON format expected by the WIX HTTP function.
     """
     unit_data = unit_df.iloc[0, :]
 
@@ -127,6 +136,12 @@ def get_request_parameters(unit_df):
 
 
 def request_post_service(params, service_url):
+    """
+    A function that calls the service to update the room.
+    :param params: The data of the room to be updated already structured as required by the Wix HTTP function.
+    :param service_url: The URL to where the update will be made
+    :return: True if the service returns a success message. False otherwise.
+    """
     tries = 0
     success = False
 

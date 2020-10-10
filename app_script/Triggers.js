@@ -4,7 +4,7 @@
  Created by: Andre Remy
  Creation Date: 10/02/2020
 
- Contains instalable triggers (https://developers.google.com/apps-script/guides/triggers/installable)
+ Contains installable triggers (https://developers.google.com/apps-script/guides/triggers/installable)
  (This project) Edit -> Current project's triggers
 */
 
