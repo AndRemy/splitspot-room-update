@@ -12,7 +12,7 @@ Google Spreadsheet has been created.
     1. [Prerequisites](#prerequisites)
     1. [Execution Process](#execution-process)
     1. [Troubleshooting](#troubleshooting)
-1. [Recommendations](#recommendation)
+1. [Recommendations](#recommendations)
 
 ## Objective
 The development made has two objective:
