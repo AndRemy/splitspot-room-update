@@ -149,7 +149,7 @@ export function post_updateRoom(request){
                             toUpdate[`bedroom${params.value[0]}Availability`] = params.value[1];
                             break;
                         case "roomPrice":
-                            let bedroomPrice = `Bedroom ${params.value[0]}: ${params.value[1]!==null?formatter.format(params.value[1]):null}`;
+                            let bedroomPrice = `Bedroom ${params.value[0]}: ${params.value[1]!==null?formatter.format(params.value[1]):''}`;
                             toUpdate[`bedroom${params.value[0]}Price`] = bedroomPrice; // 'formatter.format' formats the number to currency format ($2,500)
                             break;
                     }
@@ -226,7 +226,7 @@ export function post_batchUpdate(request){
 
                         let numberOfRooms = params.rooms.length;
                         for(let i = 0; i<numberOfRooms; i++){
-                            let bedroomPrice = `Bedroom ${params.rooms[i]}: ${params.roomsPrice[i]!==null?formatter.format(params.roomsPrice[i]):null}`;
+                            let bedroomPrice = `Bedroom ${params.rooms[i]}: ${params.roomsPrice[i]!==null?formatter.format(params.roomsPrice[i]):''}`;
                             toUpdate[`bedroom${params.rooms[i]}Price`] = bedroomPrice;
                             toUpdate[`bedroom${params.rooms[i]}Availability`] = params.roomsAvailability[i];
                         }

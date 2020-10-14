@@ -214,6 +214,7 @@ data_df = data_df[~data_df["Wix ID"].isna()]
 
 # Transforming data
 data_df = data_df.loc[:, ["Wix ID", "Room", "Price", "Status", "Date"]]
+data_df["Status"].fillna("Occupied", inplace=True)
 data_df["IsRoomActive"] = data_df["Status"].map(status)
 data_df["MonthDistance"] = data_df.loc[data_df["Date"].notna(), "Date"].apply(get_month_distance)
 data_df["RoomActiveText"] = data_df.apply(get_room_active_text, axis=1)
