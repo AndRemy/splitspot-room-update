@@ -1,6 +1,6 @@
 /*
  PriceStatusUpdate.gs
- 
+
  Created by: Andre Remy
  Creation Date: 10/02/2020
 */
@@ -11,54 +11,54 @@ var updateSandboxServiceURL = 'https://splitspot.com/_functions-dev/updateRoom';
 function doPriceAndStatusUpdate(e) {
   /*
   Function that is executed everytime there is a change in any column.
-  
+
   It will only run when there's a change in the sheet called "List" and when the change was made in the columns of "Price" and "Status".
-  If there is a change in price of a room, 
+  If there is a change in price of a room,
     It will update the price of that room on Wix. If the room is not available, it will set the price of the room to "0" regardless of the price set in the spreadsheet.
     It will update the price of the whole unit on Wix with the lowest price among all the active rooms in that specific Unit.
     If no room is available, the Unit will be update with the price "0".
-  
+
   If there is a change in status,
     It will update the status of that room. If the room is not available, it will set the price of the room to "0".
     It will update the status of the Unit where the modified room belongs
     It will update the price of the Unit where the modified room belongs. If no active room is found, it will update the price of the Unit to "0".
-  
+
   An available room is one with any of the following status
     "Upcoming Vacancy", "Vacant", "Roommate Introduction", "Lease Sent", "On-boarding":
 
   A non-available room is one with any of the following status
     "Occupied", "Lease Signed", "Deposits Complete", "Off-boarding":
-    
-  If a unit has at least one active room, the whole unit will figure as active.  
+
+  If a unit has at least one active room, the whole unit will figure as active.
     When a room is in Upcoming Vacancy, it will receive an additional text indicating when will it be available based column "Date" on the sheet List.
     When the unit is active but all of its active room are shown as "Upcoming Vacancy", the unit will recive a text indicating that it will be available on 1st day of the closest month.
     The closest month will be selected from the column "Date" of the rooms that belongs to the unit.
-  
+
   e: Event object that has the information about the modified cell (https://developers.google.com/apps-script/guides/triggers/events).
-  
+
   (returns): Returns nothing.
-  
+
   Request example to update Unit Price
   {
       "unitId":______,
       "field":"unitPrice",
       "value":800
   }
-  
+
   Request example to update Unit Availability
   {
       "unitId":______,
       "field":"unitAvailable",
       "value":[true, "Available Now!", "5/5 Rooms Available"]
   }
-  
+
   Request example to update Room Availability
   {
       "unitId":______,
       "field":"roomAvailable",
       "value":["A", true]
   }
-  
+
   Request example to update Room Availability
   {
       "unitId":______,
@@ -76,7 +76,10 @@ function doPriceAndStatusUpdate(e) {
     let roomPrice;
 
     if (activeSheet.getName() == "Pricing Updates"){
+      // Retrieving Sheet Row ID to match with the row in the List Sheet
       unitId = activeSheet.getRange(row, priceUpdateColumns.sheetUnitID + 1).getValue();
+
+      // Retrieving the price of the room from the Pricing Updates Sheet
       roomPrice = activeSheet.getRange(row, priceUpdateColumns.currentPrice + 1).getValue();
 
       activeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("List");
@@ -91,7 +94,12 @@ function doPriceAndStatusUpdate(e) {
         }
       );
     }
+    else{
+      // Retrieving the price of the room from the List Sheet when the event wasn't triggered by a change in price
+      roomPrice = activeSheet.getRange(row, listColumns.price + 1).getValue();
+    }
 
+    // Retrieving Wix ID, which is the one needed to perform the update
     unitId = activeSheet.getRange(row, listColumns.wixUnitID + 1).getValue();
 
     if(unitId !== null && unitId.length > 0){
@@ -257,7 +265,7 @@ function findMinPrice(units, newRoomPrice){
   var min = newRoomPrice;
   units.forEach(
     function(row, index){
-      if (row[listColumns.price] != null && row[listColumns.price] < min)
+      if (row[listColumns.price] !== null && row[listColumns.price] < min)
         min = row[listColumns.price];
     }
   );
